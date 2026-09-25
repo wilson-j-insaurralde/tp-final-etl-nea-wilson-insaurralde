@@ -256,8 +256,14 @@ def calcular_variacion(actual, anterior):
     Devolvé None si 'anterior' es None o cero. Redondeá a 2 decimales.
     """
     # TODO 5 --------------------------------------------------------------
-    raise NotImplementedError("TODO 5: implementá calcular_variacion()")
+    #raise NotImplementedError("TODO 5: implementá calcular_variacion()")
     # ---------------------------------------------------------------------
+    try:
+        variacion= (actual - anterior) / anterior * 100
+        variacion=round(variacion,2)
+        return variacion
+    except (ZeroDivisionError,TypeError,ValueError):
+        return None
 
 
 def agregar_variacion_interanual(filas):
