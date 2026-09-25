@@ -123,8 +123,46 @@ def ancho_a_largo(paquetes_destino):
     #           ... calcular anio y total ...
     #           for posicion, nombre in enumerate(columnas):
     #               ... saltear el total y los None, y hacer filas.append({...})
-    raise NotImplementedError("TODO 1: implementá ancho_a_largo()")
+    #raise NotImplementedError("TODO 1: implementá ancho_a_largo()")
     # ---------------------------------------------------------------------
+    for paquete in paquetes_destino:
+        provincia=paquete["provincia"]
+        columnas=paquete["orden_columnas"]
+        try:
+            idx_total=columnas.index(CLAVE_TOTAL)
+        except ValueError:
+            # Si no viene la columna total en el paquete, salteamos la provincia por inconsistencia
+            continue
+        for fila_cruda in paquete["data"]:
+            anio = extraer_anio(fila_cruda[0])
+            valores=fila_cruda[1:]
+            valor_total_raw=valores[idx_total]
+            if valor_total_raw is None:
+                continue
+            try: 
+                total_provincia=round(float(valor_total_raw),2)
+            except (ValueError,TypeError):
+                continue
+            for posicion, nombre_destino in enumerate(columnas):
+                if nombre_destino == CLAVE_TOTAL:
+                    continue
+                valor_destino_raw=valores[posicion]
+                if valor_destino_raw is None :
+                    continue
+                try: 
+                    valor_musd = round(float(valor_destino_raw),2)
+                except (ValueError,TypeError):
+                    continue
+                filas.append(
+                    {
+                        "anio": anio,
+                        "provincia": provincia,
+                        "destino": nombre_destino,
+                        "valor_musd": valor_musd,
+                        "total_provincia_musd": total_provincia,
+                    }
+                )
+
 
     logging.info("  ancho_a_largo: %s filas", len(filas))
     return filas
