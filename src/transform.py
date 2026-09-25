@@ -219,8 +219,15 @@ def calcular_participacion(valor, total):
     Redondeá a 2 decimales.
     """
     # TODO 4 --------------------------------------------------------------
-    raise NotImplementedError("TODO 4: implementá calcular_participacion()")
+    #raise NotImplementedError("TODO 4: implementá calcular_participacion()")
     # ---------------------------------------------------------------------
+    try:
+        porcentaje = (valor/total)*100
+        porcentaje=round(porcentaje,2)
+        return  porcentaje
+    except (ZeroDivisionError,TypeError,ValueError):
+        return None
+
 
 
 def agregar_derivadas_simples(filas):
