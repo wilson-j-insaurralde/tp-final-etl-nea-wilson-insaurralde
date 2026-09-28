@@ -284,8 +284,24 @@ def agregar_variacion_interanual(filas):
     #      y calcular_variacion() ya sabe qué hacer con eso.
     #
     # Usar un dict como índice evita recorrer toda la lista por cada fila.
-    raise NotImplementedError("TODO 6: implementá agregar_variacion_interanual()")
+    #raise NotImplementedError("TODO 6: implementá agregar_variacion_interanual()")
     # ---------------------------------------------------------------------
+    # 1. Primera pasada: armar el índice
+    indice={}
+    for fila in filas:
+        clave = (fila["provincia"], fila["destino"], fila["anio"])
+        indice[clave]=fila["valor_musd"]
+
+    # 2. Segunda pasada: buscar el año anterior y calcular la variación
+    for fila in filas:
+        clave_anterior=(fila["provincia"],fila["destino"],fila["anio"]-1)
+        valor_anterior = indice.get(clave_anterior)
+        fila["var_interanual_pct"] = calcular_variacion(
+            fila["valor_musd"], valor_anterior
+        )
+
+    return filas
+        
 
 
 # ======================================================================
@@ -310,8 +326,8 @@ def agregar_ranking(filas, top_n=None):
     #      sorted(grupo, key=lambda f: f["valor_musd"], reverse=True)
     #   3. Recorré el grupo ordenado con enumerate(..., start=1) y asigná
     #      'ranking_destino' y 'es_top3' (un booleano: posición <= top_n).
-    raise NotImplementedError("TODO 7: implementá agregar_ranking()")
-    # ---------------------------------------------------------------------
+    #raise NotImplementedError("TODO 7: implementá agregar_ranking()")
+    
 
 
 # ======================================================================
