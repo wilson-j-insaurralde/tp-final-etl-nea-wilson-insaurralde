@@ -365,13 +365,35 @@ def construir_indice_rubros(paquetes_rubro):
     """
     indice = {}
 
-    # TODO 8a -------------------------------------------------------------
-    # Pistas:
-    #   - Para el rubro con mayor valor:  max(dic, key=dic.get)
-    #   - El total del año es la suma de los 4 rubros: sum(dic.values())
-    #   - Descartá los valores None antes de sumar.
-    raise NotImplementedError("TODO 8a: implementá construir_indice_rubros()")
-    # ---------------------------------------------------------------------
+    for paquete in paquetes_rubro:
+        provincia = paquete["provincia"]
+        columnas = paquete["orden_columnas"]
+
+        for fila_cruda in paquete["data"]:
+            anio = extraer_anio(fila_cruda[0])
+            valores = fila_cruda[1:]
+
+            rubros = {}
+            for i, nombre_rubro in enumerate(columnas):
+                valor = valores[i]
+                if valor is not None:
+                    rubros[nombre_rubro] = float(valor)
+
+            if not rubros:
+                continue
+
+            rubro_principal = max(rubros, key=rubros.get)
+            total = sum(rubros.values())
+
+            if "Productos primarios" in rubros and total > 0:
+                pp_participacion = round(rubros["Productos primarios"] / total * 100, 2)
+            else:
+                pp_participacion = None
+
+            indice[(provincia, anio)] = {
+                "rubro_principal": rubro_principal,
+                "pp_participacion_pct": pp_participacion,
+            }
 
     logging.info("  índice de rubros: %s claves (provincia, año)", len(indice))
     return indice
@@ -388,8 +410,14 @@ def unir_con_rubros(filas, indice_rubros):
     # TODO 8b -------------------------------------------------------------
     # Para cada fila, buscá indice_rubros.get((provincia, anio)) y asigná
     # 'rubro_principal' y 'pp_participacion_pct'. Si no hay match, None.
-    raise NotImplementedError("TODO 8b: implementá unir_con_rubros()")
+    #raise NotImplementedError("TODO 8b: implementá unir_con_rubros()")
     # ---------------------------------------------------------------------
+    for fila in filas:
+        clave = (fila["provincia"], fila["anio"])
+        datos_rubro = indice_rubros.get(clave, {})
+        fila["rubro_principal"] = datos_rubro.get("rubro_principal")
+        fila["pp_participacion_pct"] = datos_rubro.get("pp_participacion_pct")
+    return filas
 
 
 # ======================================================================
