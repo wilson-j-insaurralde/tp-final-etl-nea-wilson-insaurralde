@@ -186,9 +186,39 @@ def construir_resumen(filas, detalle_checks):
     #   - Para provincias únicas y ordenadas: sorted({f["provincia"] for f in filas})
     #   - Para la fecha: datetime.now().strftime("%Y-%m-%d %H:%M")
     #   - Podés agregar más claves si querés (suma puntos en la rúbrica).
-    raise NotImplementedError("TODO 11: implementá construir_resumen()")
+    #raise NotImplementedError("TODO 11: implementá construir_resumen()")
     # ---------------------------------------------------------------------
+    valores = [f["valor_musd"] for f in filas if f.get("valor_musd") is not None]
+    anios = [f["anio"] for f in filas if f.get("anio") is not None]
 
+    minimo_val = round(min(valores), 2) if valores else 0.0
+    maximo_val = round(max(valores), 2) if valores else 0.0
+    promedio_val = round(sum(valores) / len(valores), 2) if valores else 0.0
+
+    anio_min = min(anios) if anios else None
+    anio_max = max(anios) if anios else None
+
+    cant_columnas = len(filas[0].keys()) if filas else 13
+
+    return {
+        "dataset": "Exportaciones del NEA por provincia y destino",
+        "fuente": "API de Series de Tiempo - datos.gob.ar (INDEC)",
+        "unidad": "millones de dólares FOB",
+        "generado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "filas": len(filas),
+        "columnas": cant_columnas,
+        "periodo": {
+            "desde": anio_min,
+            "hasta": anio_max
+        },
+        "provincias": sorted({f["provincia"] for f in filas}),
+        "valor_musd": {
+            "minimo": minimo_val,
+            "maximo": maximo_val,
+            "promedio": promedio_val
+        },
+        "quality_checks": detalle_checks
+    }
 
 def guardar_resumen(resumen, carpeta=None, nombre=None):
     """Escribe el resumen en JSON, legible por humanos y por programas.
@@ -198,8 +228,18 @@ def guardar_resumen(resumen, carpeta=None, nombre=None):
     """
     # TODO 12a ------------------------------------------------------------
     # Muy parecido a guardar_csv(), pero con json.dump().
-    raise NotImplementedError("TODO 12a: implementá guardar_resumen()")
+    #raise NotImplementedError("TODO 12a: implementá guardar_resumen()")
     # ---------------------------------------------------------------------
+    carpeta = carpeta or config.DIR_PROCESSED
+    nombre = nombre or "resumen.json"
+    os.makedirs(carpeta, exist_ok=True)
+    ruta = os.path.join(carpeta, nombre)
+
+    with open(ruta, "w", encoding="utf-8") as f:
+        json.dump(resumen, f, ensure_ascii=False, indent=2)
+
+    logging.info("  JSON: %s", ruta)
+    return ruta
 
 
 def escribir_log_corrida(resumen, carpeta=None, nombre=None):
