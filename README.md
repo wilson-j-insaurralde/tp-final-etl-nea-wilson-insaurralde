@@ -87,7 +87,7 @@ La misma tendencia se replica en el resto de la región: Misiones pasó de regis
 Asimismo, resalta un registro atípico en Corrientes durante 2020 con destino Brasil, donde se alcanzaron 399.14 millones de dólares frente a los 25.29 millones del año previo (un salto del 1478%), constituyendo el valor máximo histórico de todo el dataset regional.
 
 ## Estructura del proyecto
-
+```
 tp-final-etl/
 ├── data/
 │   ├── raw/                 # Datos crudos obtenidos de la API
@@ -103,6 +103,6 @@ tp-final-etl/
 │   └── test_transform.py     # Tests unitarios de transformaciones
 ├── requirements.txt
 └── README.md
-
+```
 Autor
 Wilson J. Insaurralde
