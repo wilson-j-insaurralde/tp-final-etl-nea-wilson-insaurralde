@@ -253,8 +253,8 @@ def escribir_log_corrida(resumen, carpeta=None, nombre=None):
     # TODO 12b ------------------------------------------------------------
     #raise NotImplementedError("TODO 12b: implementá escribir_log_corrida()")
     # ---------------------------------------------------------------------
-    carpeta = carpeta or config.DIR_PROCESSED
-    nombre = nombre or "historial.log"
+    carpeta = carpeta or config.DIR_LOGS
+    nombre = nombre or config.ARCHIVO_LOG
     os.makedirs(carpeta, exist_ok=True)
     ruta = os.path.join(carpeta, nombre)
 
